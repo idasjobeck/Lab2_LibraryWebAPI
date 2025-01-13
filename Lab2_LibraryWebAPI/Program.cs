@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Lab2_LibraryWebAPI.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lab2_LibraryWebAPI
@@ -13,12 +14,25 @@ namespace Lab2_LibraryWebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+            var connectionString = builder.Configuration.GetConnectionString("BooksDb");
+
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Azure")
+            {
+                //UserSecretsId from project settings
+                builder.Configuration.AddUserSecrets("6b34173c-9d9e-4152-993e-77a0f01ef3f3");
+                //set password when running in Azure
+                var password = builder.Configuration["DbPassword"];
+
+                var sqlconnectionBuilder = new SqlConnectionStringBuilder(connectionString);
+                sqlconnectionBuilder.Password = password;
+                connectionString = sqlconnectionBuilder.ConnectionString;
+            }
+
             builder.Services.AddDbContext<BooksDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("BooksDb"))
+                options.UseSqlServer(connectionString)
                     .LogTo(message => Debug.WriteLine(message))
                     .EnableSensitiveDataLogging());
 
