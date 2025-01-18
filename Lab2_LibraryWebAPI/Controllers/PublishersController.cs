@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab2_LibraryWebAPI.Data;
+using Lab2_LibraryWebAPI.DTOs;
+using Lab2_LibraryWebAPI.Extensions;
 using Lab2_LibraryWebAPI.Models;
 
 namespace Lab2_LibraryWebAPI.Controllers
@@ -22,13 +24,16 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Publishers
+        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Publisher>>> GetPublishers()
         {
             return await _context.Publishers.ToListAsync();
         }
+        */
 
         // GET: api/Publishers/5
+        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Publisher>> GetPublisher(int id)
         {
@@ -41,8 +46,10 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return publisher;
         }
+        */
 
         // PUT: api/Publishers/5
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPublisher(int id, Publisher publisher)
@@ -72,8 +79,11 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
+        //default POST
         // POST: api/Publishers
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Publisher>> PostPublisher(Publisher publisher)
@@ -83,8 +93,26 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return CreatedAtAction("GetPublisher", new { id = publisher.Id }, publisher);
         }
+        */
+
+        // POST: api/Publishers
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Publisher>> PostPublisher(PublisherNameDTO publisherNameDto)
+        {
+            var existingPublisher = await _context.Publishers.FirstOrDefaultAsync(p => p.PublisherName == publisherNameDto.PublisherName);
+            if (existingPublisher != null)
+                return BadRequest($"A publisher with the same name ({publisherNameDto.PublisherName}) already exists in the database with Id {existingPublisher.Id}.");
+
+            var publisher = publisherNameDto.ToPublisher();
+            _context.Publishers.Add(publisher);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPublisher", new { id = publisher.Id }, publisher);
+        }
 
         // DELETE: api/Publishers/5
+        /*
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePublisher(int id)
         {
@@ -99,6 +127,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
         private bool PublisherExists(int id)
         {
