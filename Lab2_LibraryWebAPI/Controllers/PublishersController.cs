@@ -33,7 +33,6 @@ namespace Lab2_LibraryWebAPI.Controllers
         */
 
         // GET: api/Publishers/5
-        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Publisher>> GetPublisher(int id)
         {
@@ -46,7 +45,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return publisher;
         }
-        */
 
         // PUT: api/Publishers/5
         /*

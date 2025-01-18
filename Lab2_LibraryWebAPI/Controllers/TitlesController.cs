@@ -33,7 +33,6 @@ namespace Lab2_LibraryWebAPI.Controllers
         */
 
         // GET: api/Titles/5
-        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Title>> GetTitle(int id)
         {
@@ -46,7 +45,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return title;
         }
-        */
 
         // PUT: api/Titles/5
         /*

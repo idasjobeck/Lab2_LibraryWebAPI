@@ -33,7 +33,6 @@ namespace Lab2_LibraryWebAPI.Controllers
         */
 
         // GET: api/Editions/5
-        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Edition>> GetEdition(int id)
         {
@@ -46,7 +45,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return edition;
         }
-        */
 
         // PUT: api/Editions/5
         /*

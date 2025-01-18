@@ -35,7 +35,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
 
         // GET: api/Authors/5
-        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Author>> GetAuthor(int id)
         {
@@ -48,7 +47,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return author;
         }
-        */
 
         // PUT: api/Authors/5
         /*

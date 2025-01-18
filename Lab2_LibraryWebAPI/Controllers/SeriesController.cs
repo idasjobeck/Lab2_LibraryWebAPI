@@ -33,7 +33,6 @@ namespace Lab2_LibraryWebAPI.Controllers
         */
 
         // GET: api/Series/5
-        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Series>> GetSeries(int id)
         {
@@ -46,7 +45,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return series;
         }
-        */
 
         // PUT: api/Series/5
         /*

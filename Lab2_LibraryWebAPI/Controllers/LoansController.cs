@@ -32,7 +32,6 @@ namespace Lab2_LibraryWebAPI.Controllers
         */
 
         // GET: api/Loans/5
-        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Loan>> GetLoan(int id)
         {
@@ -45,7 +44,6 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return loan;
         }
-        */
 
         // PUT: api/Loans/5
         /*
