@@ -15,5 +15,6 @@
         public int AvailableQty { get; set; }
 
         public List<Author> Authors { get; set; }
+        public List<Loan> Loans { get; set; }
     }
 }

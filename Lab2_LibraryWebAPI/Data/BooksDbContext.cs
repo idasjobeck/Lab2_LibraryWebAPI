@@ -30,6 +30,14 @@ namespace Lab2_LibraryWebAPI.Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email, "IX_Users_Email")
                 .IsUnique();
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Loans)
+                .WithOne(e => e.User)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Book>()
+                .HasMany(e => e.Loans)
+                .WithOne(e => e.Book)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
