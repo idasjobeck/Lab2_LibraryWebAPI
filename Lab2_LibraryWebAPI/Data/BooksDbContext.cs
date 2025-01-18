@@ -18,6 +18,7 @@ namespace Lab2_LibraryWebAPI.Data
         public DbSet<Edition> Editions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Loan> Loans { get; set; }
+        public DbSet<AuthorBook> AuthorBook { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,10 @@ namespace Lab2_LibraryWebAPI.Data
                 .HasMany(e => e.Loans)
                 .WithOne(e => e.Book)
                 .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Author>()
+                .HasMany(e => e.Books)
+                .WithMany(e => e.Authors)
+                .UsingEntity<AuthorBook>();
         }
     }
 }
