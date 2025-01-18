@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab2_LibraryWebAPI.Data;
+using Lab2_LibraryWebAPI.DTOs;
+using Lab2_LibraryWebAPI.Extensions;
 using Lab2_LibraryWebAPI.Models;
 
 namespace Lab2_LibraryWebAPI.Controllers
@@ -22,13 +24,16 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Series
+        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Series>>> GetSeries()
         {
             return await _context.Series.ToListAsync();
         }
+        */
 
         // GET: api/Series/5
+        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Series>> GetSeries(int id)
         {
@@ -41,8 +46,10 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return series;
         }
+        */
 
         // PUT: api/Series/5
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSeries(int id, Series series)
@@ -72,8 +79,11 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
+        //default POST
         // POST: api/Series
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Series>> PostSeries(Series series)
@@ -83,8 +93,26 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return CreatedAtAction("GetSeries", new { id = series.Id }, series);
         }
+        */
+
+        // POST: api/Series
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Series>> PostSeries(SeriesNameDTO seriesNameDto)
+        {
+            var existingSeries = await _context.Series.FirstOrDefaultAsync(s => s.SeriesName == seriesNameDto.SeriesName);
+            if (existingSeries != null)
+                return BadRequest($"A series with the same name ({seriesNameDto.SeriesName}) already exists in the database with Id {existingSeries.Id}.");
+
+            var series = seriesNameDto.ToSeries();
+            _context.Series.Add(series);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetSeries", new { id = series.Id }, series);
+        }
 
         // DELETE: api/Series/5
+        /*
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSeries(int id)
         {
@@ -99,6 +127,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
         private bool SeriesExists(int id)
         {
