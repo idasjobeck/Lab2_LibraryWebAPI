@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab2_LibraryWebAPI.Data;
+using Lab2_LibraryWebAPI.DTOs;
+using Lab2_LibraryWebAPI.Extensions;
 using Lab2_LibraryWebAPI.Models;
 
 namespace Lab2_LibraryWebAPI.Controllers
@@ -22,13 +24,16 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Editions
+        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Edition>>> GetEditions()
         {
             return await _context.Editions.ToListAsync();
         }
+        */
 
         // GET: api/Editions/5
+        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Edition>> GetEdition(int id)
         {
@@ -41,8 +46,10 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return edition;
         }
+        */
 
         // PUT: api/Editions/5
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEdition(int id, Edition edition)
@@ -72,8 +79,11 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
+        //default POST
         // POST: api/Editions
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Edition>> PostEdition(Edition edition)
@@ -83,8 +93,26 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return CreatedAtAction("GetEdition", new { id = edition.Id }, edition);
         }
+        */
+
+        // POST: api/Editions
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Edition>> PostEdition(EditionNameDTO editionNameDto)
+        {
+            var existingEdition = await _context.Editions.FirstOrDefaultAsync(e => e.EditionName == editionNameDto.EditionName);
+            if (existingEdition != null)
+                return BadRequest($"An edition with the same name ({editionNameDto.EditionName}) already exists in the database with Id {existingEdition.Id}.");
+
+            var edition = editionNameDto.ToEdition();
+            _context.Editions.Add(edition);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetEdition", new { id = edition.Id }, edition);
+        }
 
         // DELETE: api/Editions/5
+        /*
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEdition(int id)
         {
@@ -99,6 +127,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
         private bool EditionExists(int id)
         {
