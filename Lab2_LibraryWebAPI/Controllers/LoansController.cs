@@ -140,14 +140,47 @@ namespace Lab2_LibraryWebAPI.Controllers
         public async Task<ActionResult<Loan>> PostLoan(CreateLoanDTO createLoanDto)
         {
             //check if book exists
-            var book = await _context.Books.FindAsync(createLoanDto.BookId);
+            var book = await _context.Books.Include(b => b.Title).FirstOrDefaultAsync(b => b.Title.TitleName == createLoanDto.Title);
             if (book == null)
                 return BadRequest("Book not found.");
             //check if book is available
             if (book.AvailableQty == 0)
                 return BadRequest("There are no copies available of this book.");
             //check if user exists
-            var user = await _context.Users.FindAsync(createLoanDto.UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.CardNumber == createLoanDto.CardNumber);
+            if (user == null)
+                return BadRequest("User not found.");
+
+            var loan = new Loan
+            {
+                Book = book,
+                User = user,
+                LoanDate = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"),
+                ReturnedDate = null,
+                Rating = null
+            };
+            book.AvailableQty--;
+
+            _context.Loans.Add(loan);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetLoan", new { id = loan.Id }, loan);
+        }
+
+        // POST: api/Loans
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("CreateLoanWithIds")]
+        public async Task<ActionResult<Loan>> CreateLoanWithIds(CreateLoanWithIdsDTO createLoanWithIdsDto)
+        {
+            //check if book exists
+            var book = await _context.Books.FindAsync(createLoanWithIdsDto.BookId);
+            if (book == null)
+                return BadRequest("Book not found.");
+            //check if book is available
+            if (book.AvailableQty == 0)
+                return BadRequest("There are no copies available of this book.");
+            //check if user exists
+            var user = await _context.Users.FindAsync(createLoanWithIdsDto.UserId);
             if (user == null)
                 return BadRequest("User not found.");
 

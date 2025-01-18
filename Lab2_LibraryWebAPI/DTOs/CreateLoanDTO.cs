@@ -2,7 +2,7 @@
 {
     public class CreateLoanDTO
     {
-        public int BookId { get; set; }
-        public int UserId { get; set; }
+        public string Title { get; set; }
+        public int CardNumber { get; set; }
     }
 }
