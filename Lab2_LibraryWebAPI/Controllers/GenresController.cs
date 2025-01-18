@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab2_LibraryWebAPI.Data;
+using Lab2_LibraryWebAPI.DTOs;
+using Lab2_LibraryWebAPI.Extensions;
 using Lab2_LibraryWebAPI.Models;
 
 namespace Lab2_LibraryWebAPI.Controllers
@@ -22,13 +24,16 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Genres
+        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
         {
             return await _context.Genres.ToListAsync();
         }
+        */
 
         // GET: api/Genres/5
+        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Genre>> GetGenre(int id)
         {
@@ -41,8 +46,10 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return genre;
         }
+        */
 
         // PUT: api/Genres/5
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGenre(int id, Genre genre)
@@ -72,8 +79,11 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
+        //default POST
         // POST: api/Genres
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Genre>> PostGenre(Genre genre)
@@ -83,8 +93,26 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return CreatedAtAction("GetGenre", new { id = genre.Id }, genre);
         }
+        */
+
+        // POST: api/Genres
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Genre>> PostGenre(GenreNameDTO genreNameDto)
+        {
+            var existingGenre = await _context.Genres.FirstOrDefaultAsync(g => g.GenreName == genreNameDto.GenreName);
+            if (existingGenre != null)
+                return BadRequest($"A genre with the same name ({genreNameDto.GenreName}) already exists in the database with Id {existingGenre.Id}.");
+
+            var genre = genreNameDto.ToGenre();
+            _context.Genres.Add(genre);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetGenre", new { id = genre.Id }, genre);
+        }
 
         // DELETE: api/Genres/5
+        /*
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
@@ -99,6 +127,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
         private bool GenreExists(int id)
         {
