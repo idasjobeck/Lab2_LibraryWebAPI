@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab2_LibraryWebAPI.Data;
+using Lab2_LibraryWebAPI.DTOs;
+using Lab2_LibraryWebAPI.Extensions;
 using Lab2_LibraryWebAPI.Models;
 
 namespace Lab2_LibraryWebAPI.Controllers
@@ -22,13 +24,16 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Titles
+        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Title>>> GetTitles()
         {
             return await _context.Titles.ToListAsync();
         }
+        */
 
         // GET: api/Titles/5
+        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Title>> GetTitle(int id)
         {
@@ -41,8 +46,10 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return title;
         }
+        */
 
         // PUT: api/Titles/5
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTitle(int id, Title title)
@@ -72,8 +79,11 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
+        //default POST
         // POST: api/Titles
+        /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Title>> PostTitle(Title title)
@@ -83,8 +93,26 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return CreatedAtAction("GetTitle", new { id = title.Id }, title);
         }
+        */
+
+        // POST: api/Titles
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Title>> PostTitle(TitleNameDTO titleNameDto)
+        {
+            var existingTitle = await _context.Titles.FirstOrDefaultAsync(t => t.TitleName == titleNameDto.TitleName);
+            if (existingTitle != null)
+                return BadRequest($"A title with the same name ({titleNameDto.TitleName}) already exists in the database with Id {existingTitle.Id}.");
+
+            var title = titleNameDto.ToTitle();
+            _context.Titles.Add(title);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTitle", new { id = title.Id }, title);
+        }
 
         // DELETE: api/Titles/5
+        /*
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTitle(int id)
         {
@@ -99,6 +127,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             return NoContent();
         }
+        */
 
         private bool TitleExists(int id)
         {
