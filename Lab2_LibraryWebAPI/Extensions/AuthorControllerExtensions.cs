@@ -21,16 +21,9 @@ namespace Lab2_LibraryWebAPI.Extensions
             return existingAuthors;
         }
 
-        public static async Task<List<Author>> GetAuthorsAsync(this List<int> authorIds, BooksDbContext context)
+        public static  IQueryable<Author> GetAuthorsByIds(this IQueryable<Author> authors, List<int> authorIds)
         {
-            var existingAuthors = new List<Author>();
-            foreach (var authorId in authorIds)
-            {
-                var existingAuthor = await context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
-                if (existingAuthor != null)
-                    existingAuthors.Add(existingAuthor);
-            }
-            return existingAuthors;
+            return authors.Where(a => authorIds.Contains(a.Id));
         }
     }
 }

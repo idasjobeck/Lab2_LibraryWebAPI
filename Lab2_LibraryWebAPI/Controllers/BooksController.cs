@@ -218,8 +218,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             var bookWithoutAuthor = createBookWithAuthorIdDto.toBookWithoutAuthorDTO();
             var book = await PopulateBookAsync(bookWithoutAuthor);
-            book.Authors = await createBookWithAuthorIdDto.AuthorIds.GetAuthorsAsync(_context);
-            //book.Authors = await _context.Authors.GetAuthorsByIds(createBookWithAuthorIdDto.AuthorIds).ToListAsync();
+            book.Authors = await _context.Authors.GetAuthorsByIds(createBookWithAuthorIdDto.AuthorIds).ToListAsync();
 
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
@@ -264,7 +263,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 Title = await createBookWithIdsNewTitleDto.Title.GetTitleAsync(_context),
                 Series = createBookWithIdsNewTitleDto.Series == null ? null : await createBookWithIdsNewTitleDto.Series.GetSeriesAsync(_context),
                 NumberInSeries = createBookWithIdsNewTitleDto.Series == null ? null : createBookWithIdsNewTitleDto.NumberInSeries,
-                Authors = await createBookWithIdsNewTitleDto.AuthorIds.GetAuthorsAsync(_context),
+                Authors = await _context.Authors.GetAuthorsByIds(createBookWithIdsNewTitleDto.AuthorIds).ToListAsync(),
                 Genre = genre,
                 ISBN = createBookWithIdsNewTitleDto.ISBN,
                 PublishedYear = new DateOnly(createBookWithIdsNewTitleDto.PublishedYear, 1, 1),
@@ -320,7 +319,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 Title = title,
                 Series = createBookWithIdsNewEditionDto.SeriesId == null ? null : series,
                 NumberInSeries = createBookWithIdsNewEditionDto.SeriesId == null ? null : createBookWithIdsNewEditionDto.NumberInSeries,
-                Authors = await createBookWithIdsNewEditionDto.AuthorIds.GetAuthorsAsync(_context),
+                Authors = await _context.Authors.GetAuthorsByIds(createBookWithIdsNewEditionDto.AuthorIds).ToListAsync(),
                 Genre = genre,
                 ISBN = createBookWithIdsNewEditionDto.ISBN,
                 PublishedYear = new DateOnly(createBookWithIdsNewEditionDto.PublishedYear, 1, 1),
