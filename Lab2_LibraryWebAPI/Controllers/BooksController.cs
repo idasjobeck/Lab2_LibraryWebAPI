@@ -116,7 +116,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
         // GET: api/Books/5
         [HttpGet("GetBookWithId/{id}")]
-        public async Task<ActionResult<DisplayBookWithIdsDTO>> GetBookWithId(int id)
+        public async Task<ActionResult<DisplayBookWithIdsDTO>> GetBookWithIds(int id)
         {
             var book = await _context.Books.FindAsync(id);
 
