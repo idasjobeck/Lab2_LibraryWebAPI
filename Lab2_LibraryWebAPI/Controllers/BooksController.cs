@@ -37,18 +37,15 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DisplayBookDTO>>> GetBooks()
         {
-            var books = await _context.Books
+            var displayBookDtos = await _context.Books
                 .Include(b => b.Title)
                 .Include(b => b.Series)
                 .Include(b => b.Authors)
                 .Include(b => b.Genre)
                 .Include(b => b.Publisher)
                 .Include(b => b.Edition)
+                .Select(b => b.ToDisplayBookDTO())
                 .ToListAsync();
-
-            var displayBookDtos = new List<DisplayBookDTO>();
-            foreach (var book in books)
-                displayBookDtos.Add(book.ToDisplayBookDTO());
 
             return displayBookDtos;
         }
@@ -57,20 +54,16 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpGet("GetBooksWithIds")]
         public async Task<ActionResult<IEnumerable<DisplayBookWithIdsDTO>>> GetBooksWithIds()
         {
-            var books = await _context.Books
+            var displayBookWithIdsDtos = await _context.Books
                 .Include(b => b.Title)
                 .Include(b => b.Series)
                 .Include(b => b.Authors)
                 .Include(b => b.Genre)
                 .Include(b => b.Publisher)
                 .Include(b => b.Edition)
+                .Select(b => b.ToDisplayBookWithIdsDTO())
                 .ToListAsync();
 
-            var displayBookWithIdsDtos = new List<DisplayBookWithIdsDTO>();
-            foreach (var book in books)
-            {
-                displayBookWithIdsDtos.Add(book.ToDisplayBookWithIdsDTO());
-            }
             return displayBookWithIdsDtos;
         }
 
@@ -98,10 +91,8 @@ namespace Lab2_LibraryWebAPI.Controllers
             var book = await _context.Books.FindAsync(id);
 
             if (book == null)
-            {
                 return NotFound();
-            }
-
+            
             book = await _context.Books
                 .Include(b => b.Title)
                 .Include(b => b.Series)
@@ -121,9 +112,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             var book = await _context.Books.FindAsync(id);
 
             if (book == null)
-            {
                 return NotFound();
-            }
 
             book = await _context.Books
                 .Include(b => b.Title)
