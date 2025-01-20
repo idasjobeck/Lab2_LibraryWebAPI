@@ -183,6 +183,10 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (existingISBN != null)
                 return BadRequest("ISBN already exists in the database.");
 
+            //check if available qty is higher than total qty
+            if (createBookDto.AvailableQty > createBookDto.TotalQty)
+                return BadRequest("Available quantity cannot be higher than total quantity.");
+
             var book = await PopulateBookAsync(createBookDto.toBookWithoutAuthorDTO());
             book.Authors = await createBookDto.Authors.GetAuthorsAsync(_context);
 
@@ -201,6 +205,10 @@ namespace Lab2_LibraryWebAPI.Controllers
             var existingISBN = await _context.Books.FirstOrDefaultAsync(b => b.ISBN == createBookWithAuthorIdDto.ISBN);
             if (existingISBN != null)
                 return BadRequest("ISBN already exists in the database.");
+
+            //check if available qty is higher than total qty
+            if (createBookWithAuthorIdDto.AvailableQty > createBookWithAuthorIdDto.TotalQty)
+                return BadRequest("Available quantity cannot be higher than total quantity.");
 
             foreach (var authorId in createBookWithAuthorIdDto.AuthorIds)
             {
@@ -228,6 +236,10 @@ namespace Lab2_LibraryWebAPI.Controllers
             var existingISBN = _context.Books.FirstOrDefault(b => b.ISBN == createBookWithIdsNewTitleDto.ISBN);
             if (existingISBN != null)
                 return BadRequest("ISBN already exists in the database.");
+
+            //check if available qty is higher than total qty
+            if (createBookWithIdsNewTitleDto.AvailableQty > createBookWithIdsNewTitleDto.TotalQty)
+                return BadRequest("Available quantity cannot be higher than total quantity.");
 
             foreach (var authorId in createBookWithIdsNewTitleDto.AuthorIds)
             {
@@ -277,6 +289,10 @@ namespace Lab2_LibraryWebAPI.Controllers
             var existingISBN = _context.Books.FirstOrDefault(b => b.ISBN == createBookWithIdsNewEditionDto.ISBN);
             if (existingISBN != null)
                 return BadRequest("ISBN already exists in the database.");
+
+            //check if available qty is higher than total qty
+            if (createBookWithIdsNewEditionDto.AvailableQty > createBookWithIdsNewEditionDto.TotalQty)
+                return BadRequest("Available quantity cannot be higher than total quantity.");
 
             var title = await _context.Titles.FindAsync(createBookWithIdsNewEditionDto.TitleId);
             if (title == null)

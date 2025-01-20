@@ -43,6 +43,8 @@ namespace Lab2_LibraryWebAPI.Data
                 .HasMany(e => e.Books)
                 .WithMany(e => e.Authors)
                 .UsingEntity<AuthorBook>();
+            modelBuilder.Entity<Book>()
+                .ToTable(b => b.HasCheckConstraint("CK_Book_AvailableQty", "AvailableQty <= TotalQty"));
         }
     }
 }
