@@ -858,3 +858,19 @@ $sqlResult | Format-Table
 # Clear variables being reused
 $response = $null
 $statusCode = $null
+
+
+Write-Host "`n *** The script has now finished testing the endpoints. ***" -BackgroundColor Yellow -ForegroundColor Black -NoNewline
+Write-Host ""
+
+# Check if the database exists
+#$conStringDbExcluded = $connectionString -replace "Database=[^;]+;", ""
+$queryDbExists = Invoke-Sqlcmd -ConnectionString $conStringDbExcluded -Query "Select name FROM sys.databases WHERE name='$databaseName'"
+if($queryDbExists){
+    if($dropDatabase -or (Read-Host "Do you want to drop the database? (y/n)").ToLower() -eq "y") { 
+
+        # Drop the database
+        Invoke-Sqlcmd -ConnectionString $connectionString -Query  "USE master;ALTER DATABASE $databaseName SET SINGLE_USER WITH ROLLBACK IMMEDIATE;DROP DATABASE $databaseName;"
+        Write-Host "Database $databaseName dropped." -ForegroundColor Green
+    }
+}
