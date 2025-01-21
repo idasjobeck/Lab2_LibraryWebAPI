@@ -47,5 +47,10 @@ namespace Lab2_LibraryWebAPI.Extensions
         {
             return authors.Select(a => a.ToAuthorNameWithIdDTO()).ToList();
         }
+
+        public static string ToAuthorsAsString(this List<Author> authors)
+        {
+            return string.Join(", ", authors.Select(a => $"{a.FirstName} {a.LastName}"));
+        }
     }
 }

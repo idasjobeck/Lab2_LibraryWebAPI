@@ -2,15 +2,15 @@
 {
     public class DisplayBookDTO
     {
-        public TitleNameDTO Title { get; set; }
-        public SeriesNameDTO? Series { get; set; }
+        public string Title { get; set; }
+        public string? Series { get; set; }
         public int? NumberInSeries { get; set; }
-        public List<AuthorNameDTO> Authors { get; set; }
-        public GenreNameDTO Genre { get; set; }
+        public string Authors { get; set; }
+        public string Genre { get; set; }
         public string ISBN { get; set; }
         public int PublishedYear { get; set; }
-        public PublisherNameDTO Publisher { get; set; }
-        public EditionNameDTO Edition { get; set; }
+        public string Publisher { get; set; }
+        public string Edition { get; set; }
         public int TotalQty { get; set; }
         public int AvailableQty { get; set; }
     }

@@ -476,7 +476,7 @@ $endPoint = "$baseUrl/api/Books"
 
 $response = Invoke-RestMethod -Uri $endPoint -Method $httpMethod
 Write-Host "Response from the API:" -ForegroundColor Green
-$response | Format-Table
+$response | Format-Table -Property Id, Title, Series, NumberInSeries, Genre, ISBN, PublishedYear, Publisher, Edition, TotalQty, AvailableQty, Authors
 
 # Clear variables being reused
 $response = $null
@@ -491,7 +491,7 @@ $endPoint = "$baseUrl/api/Books/GetBooksWithIds"
 
 $response = Invoke-RestMethod -Uri $endPoint -Method $httpMethod
 Write-Host "Response from the API:" -ForegroundColor Green
-$response | Format-Table
+$response | Format-Table -Property Id, Title, Series, NumberInSeries, Genre, ISBN, PublishedYear, Publisher, Edition, TotalQty, AvailableQty, Authors
 
 # Clear variables being reused
 $response = $null
@@ -515,7 +515,7 @@ $endPoint = "$baseUrl/api/Books/2"
 
 $response = Invoke-RestMethod -Uri $endPoint -Method $httpMethod
 Write-Host "Response from the API:" -ForegroundColor Green
-$response | Format-Table
+$response | Format-Table -Property Id, Title, Series, NumberInSeries, Genre, ISBN, PublishedYear, Publisher, Edition, TotalQty, AvailableQty, Authors
 
 # Clear variables being reused
 $response = $null
@@ -530,7 +530,7 @@ $endPoint = "$baseUrl/api/Books/GetBookWithId/3"
 
 $response = Invoke-RestMethod -Uri $endPoint -Method $httpMethod
 Write-Host "Response from the API:" -ForegroundColor Green
-$response | Format-Table
+$response | Format-Table -Property Id, Title, Series, NumberInSeries, Genre, ISBN, PublishedYear, Publisher, Edition, TotalQty, AvailableQty, Authors
 
 # Clear variables being reused
 $response = $null

@@ -1,7 +1,7 @@
-﻿using Lab2_LibraryWebAPI.Extensions;
+﻿using Lab2_LibraryWebAPI.DTOs;
 using Lab2_LibraryWebAPI.Models;
 
-namespace Lab2_LibraryWebAPI.DTOs
+namespace Lab2_LibraryWebAPI.Extensions
 {
     public static class BookDTOsExtensions
     {
@@ -43,20 +43,20 @@ namespace Lab2_LibraryWebAPI.DTOs
         {
             return new DisplayBookDTO
             {
-                Title = book.Title.ToTitleDTO(),
-                Series = book.Series?.ToSeriesDTO(),
+                Title = book.Title.TitleName,
+                Series = book.Series?.SeriesName,
                 NumberInSeries = book.NumberInSeries,
-                Authors = book.Authors.ToAuthorNameDTOs(),
-                Genre = book.Genre.ToGenreDTO(),
+                Authors = book.Authors.ToAuthorsAsString(),
+                Genre = book.Genre.GenreName,
                 ISBN = book.ISBN,
                 PublishedYear = book.PublishedYear.Year,
-                Publisher = book.Publisher.ToPublisherDTO(),
-                Edition = book.Edition.ToEditionDTO(),
+                Publisher = book.Publisher.PublisherName,
+                Edition = book.Edition.EditionName,
                 TotalQty = book.TotalQty,
                 AvailableQty = book.AvailableQty
             };
         }
-
+        
         public static DisplayBookWithIdsDTO ToDisplayBookWithIdsDTO(this Book book)
         {
             return new DisplayBookWithIdsDTO
