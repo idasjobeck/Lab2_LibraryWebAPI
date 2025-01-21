@@ -24,13 +24,11 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Genres
-        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
         {
             return await _context.Genres.ToListAsync();
         }
-        */
 
         // GET: api/Genres/5
         [HttpGet("{id}")]

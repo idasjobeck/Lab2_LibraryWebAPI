@@ -24,13 +24,11 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Series
-        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Series>>> GetSeries()
         {
             return await _context.Series.ToListAsync();
         }
-        */
 
         // GET: api/Series/5
         [HttpGet("{id}")]

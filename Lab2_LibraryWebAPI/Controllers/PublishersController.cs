@@ -24,13 +24,11 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Publishers
-        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Publisher>>> GetPublishers()
         {
             return await _context.Publishers.ToListAsync();
         }
-        */
 
         // GET: api/Publishers/5
         [HttpGet("{id}")]

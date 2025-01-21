@@ -24,13 +24,11 @@ namespace Lab2_LibraryWebAPI.Controllers
         }
 
         // GET: api/Editions
-        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Edition>>> GetEditions()
         {
             return await _context.Editions.ToListAsync();
         }
-        */
 
         // GET: api/Editions/5
         [HttpGet("{id}")]

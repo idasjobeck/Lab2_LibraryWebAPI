@@ -25,13 +25,11 @@ namespace Lab2_LibraryWebAPI.Controllers
 
 
         // GET: api/Authors
-        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
         {
             return await _context.Authors.ToListAsync();
         }
-        */
 
 
         // GET: api/Authors/5
