@@ -98,8 +98,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Edition>> PostEdition(EditionNameDTO editionNameDto)
         {
-            var existingEdition = await _context.Editions.FirstOrDefaultAsync(e => e.EditionName == editionNameDto.EditionName);
-            if (existingEdition != null)
+            if (_context.Editions.TryGetEditionByName(editionNameDto.EditionName, out Edition existingEdition))
                 return BadRequest($"An edition with the same name ({editionNameDto.EditionName}) already exists in the database with Id {existingEdition.Id}.");
 
             var edition = editionNameDto.ToEdition();

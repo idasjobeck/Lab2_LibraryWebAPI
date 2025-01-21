@@ -247,8 +247,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (publisher == null)
                 return BadRequest($"Publisher with Id {createBookWithIdsNewTitleDto.PublisherId} does not exist in the database.");
 
-            var edition = await _context.Editions.FindAsync(createBookWithIdsNewTitleDto.EditionId);
-            if (edition == null)
+            if (!_context.Editions.TryGetEditionById(createBookWithIdsNewTitleDto.EditionId, out Edition edition))
                 return BadRequest($"Edition with Id {createBookWithIdsNewTitleDto.EditionId} does not exist in the database.");
 
             var book = new Book
@@ -313,7 +312,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 ISBN = createBookWithIdsNewEditionDto.ISBN,
                 PublishedYear = new DateOnly(createBookWithIdsNewEditionDto.PublishedYear, 1, 1),
                 Publisher = await createBookWithIdsNewEditionDto.Publisher.GetPublisherAsync(_context),
-                Edition = await createBookWithIdsNewEditionDto.Edition.GetEditionAsync(_context),
+                Edition = await _context.Editions.GetEditionAsync(createBookWithIdsNewEditionDto.Edition),
                 TotalQty = createBookWithIdsNewEditionDto.TotalQty,
                 AvailableQty = createBookWithIdsNewEditionDto.AvailableQty
             };
@@ -379,7 +378,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 ISBN = bookWithoutAuthor.ISBN,
                 PublishedYear = new DateOnly(bookWithoutAuthor.PublishedYear, 1, 1),
                 Publisher = await bookWithoutAuthor.Publisher.GetPublisherAsync(_context),
-                Edition = await bookWithoutAuthor.Edition.GetEditionAsync(_context),
+                Edition = await _context.Editions.GetEditionAsync(bookWithoutAuthor.Edition),
                 TotalQty = bookWithoutAuthor.TotalQty,
                 AvailableQty = bookWithoutAuthor.AvailableQty
             };
