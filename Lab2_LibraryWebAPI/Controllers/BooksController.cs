@@ -251,7 +251,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             var book = new Book
             {
-                Title = await createBookWithIdsNewTitleDto.Title.GetTitleAsync(_context),
+                Title = await _context.Titles.GetTitleAsync(createBookWithIdsNewTitleDto.Title),
                 Series = createBookWithIdsNewTitleDto.Series == null ? null : await createBookWithIdsNewTitleDto.Series.GetSeriesAsync(_context),
                 NumberInSeries = createBookWithIdsNewTitleDto.Series == null ? null : createBookWithIdsNewTitleDto.NumberInSeries,
                 Authors = await _context.Authors.GetAuthorsByIds(createBookWithIdsNewTitleDto.AuthorIds).ToListAsync(),
@@ -284,8 +284,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (createBookWithIdsNewEditionDto.AvailableQty > createBookWithIdsNewEditionDto.TotalQty)
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
-            var title = await _context.Titles.FindAsync(createBookWithIdsNewEditionDto.TitleId);
-            if (title == null)
+            if (!_context.Titles.TryGetTitleById(createBookWithIdsNewEditionDto.TitleId, out Title title))
                 return BadRequest($"Title with Id {createBookWithIdsNewEditionDto.TitleId} does not exist in the database.");
 
             var series = await _context.Series.FindAsync(createBookWithIdsNewEditionDto.SeriesId);
@@ -370,7 +369,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             //All of the Get[Item]Async (e.g. GetTitleAsync etc) extension methods check if [item] exists, uses existing [item] if it does, and creates a new [item] if it doesn't.
             return new Book
             {
-                Title = await bookWithoutAuthor.Title.GetTitleAsync(_context),
+                Title = await _context.Titles.GetTitleAsync(bookWithoutAuthor.Title),
                 Series = bookWithoutAuthor.Series == null ? null : await bookWithoutAuthor.Series.GetSeriesAsync(_context),
                 NumberInSeries = bookWithoutAuthor.Series == null ? null : bookWithoutAuthor.NumberInSeries,
                 Genre = await _context.Genres.GetGenreAsync(bookWithoutAuthor.Genre),
