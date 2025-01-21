@@ -25,9 +25,33 @@ namespace Lab2_LibraryWebAPI.Extensions
         {
             return authors.Where(a => authorIds.Contains(a.Id));
         }
+
         public static bool AuthorsExists(this IQueryable<Author> authors, List<int> authorIds)
         {
             return authorIds.All(id => authors.Any(a => a.Id == id));
+        }
+
+        public static IQueryable<Author> GetAuthors(this IQueryable<Author> authors, string firstName, string lastName)
+        {
+            return authors.Where(a => a.FirstName == firstName && a.LastName == lastName);
+        }
+
+        public static bool TryGetAuthorById(this IQueryable<Author> authors, int authorId, out Author author)
+        {
+            var authorExists = authors.Any(a => a.Id == authorId);
+
+            author = authorExists ? authors.First(a => a.Id == authorId) : null!;
+
+            return authorExists;
+        }
+
+        public static bool TryGetAuthorByName(this IQueryable<Author> authors, string firstName, string lastName, out Author author)
+        {
+            var authorExists = authors.Any(a => a.FirstName == firstName && a.LastName == lastName);
+
+            author = authorExists ? authors.First(a => a.FirstName == firstName && a.LastName == lastName) : null!;
+
+            return authorExists;
         }
     }
 }

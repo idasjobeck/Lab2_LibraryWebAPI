@@ -100,8 +100,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Author>> PostAuthor(AuthorNameDTO authorNameDto)
         {
-            var existingAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.FirstName == authorNameDto.FirstName && a.LastName == authorNameDto.LastName);
-            if (existingAuthor != null)
+            if (_context.Authors.TryGetAuthorByName(authorNameDto.FirstName, authorNameDto.LastName, out var existingAuthor))
                 return BadRequest($"An author with the same name ({authorNameDto.FirstName} {authorNameDto.LastName}) already exists in the database with Id {existingAuthor.Id}.");
 
             var author = authorNameDto.ToAuthor();
@@ -134,8 +133,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
+            if (!_context.Authors.TryGetAuthorById(id, out var author))
                 return NotFound();
 
             //check if author has any books
