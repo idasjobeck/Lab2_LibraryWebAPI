@@ -211,7 +211,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
             if (!_context.Authors.AuthorsExists(createBookWithAuthorIdDto.AuthorIds))
-                return BadRequest("One of more authors do not exist in the database.");
+                return BadRequest("One or more authors do not exist in the database.");
 
             var bookWithoutAuthor = createBookWithAuthorIdDto.toBookWithoutAuthorDTO();
             var book = await PopulateBookAsync(bookWithoutAuthor);
@@ -238,10 +238,9 @@ namespace Lab2_LibraryWebAPI.Controllers
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
             if (!_context.Authors.AuthorsExists(createBookWithIdsNewTitleDto.AuthorIds))
-                return BadRequest("One of more authors do not exist in the database.");
+                return BadRequest("One or more authors do not exist in the database.");
 
-            var genre = await _context.Genres.FindAsync(createBookWithIdsNewTitleDto.GenreId);
-            if (genre == null)
+            if(!_context.Genres.TryGetGenreById(createBookWithIdsNewTitleDto.GenreId, out Genre genre))
                 return BadRequest($"Genre with Id {createBookWithIdsNewTitleDto.GenreId} does not exist in the database.");
 
             var publisher = await _context.Publishers.FindAsync(createBookWithIdsNewTitleDto.PublisherId);
@@ -299,10 +298,9 @@ namespace Lab2_LibraryWebAPI.Controllers
             }
 
             if (!_context.Authors.AuthorsExists(createBookWithIdsNewEditionDto.AuthorIds))
-                return BadRequest("One of more authors do not exist in the database.");
+                return BadRequest("One or more authors do not exist in the database.");
 
-            var genre = await _context.Genres.FindAsync(createBookWithIdsNewEditionDto.GenreId);
-            if (genre == null)
+            if (!_context.Genres.TryGetGenreById(createBookWithIdsNewEditionDto.GenreId, out Genre genre))
                 return BadRequest($"Genre with Id {createBookWithIdsNewEditionDto.GenreId} does not exist in the database.");
 
             var book = new Book
@@ -377,7 +375,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 Title = await bookWithoutAuthor.Title.GetTitleAsync(_context),
                 Series = bookWithoutAuthor.Series == null ? null : await bookWithoutAuthor.Series.GetSeriesAsync(_context),
                 NumberInSeries = bookWithoutAuthor.Series == null ? null : bookWithoutAuthor.NumberInSeries,
-                Genre = await bookWithoutAuthor.Genre.GetGenreAsync(_context),
+                Genre = await _context.Genres.GetGenreAsync(bookWithoutAuthor.Genre),
                 ISBN = bookWithoutAuthor.ISBN,
                 PublishedYear = new DateOnly(bookWithoutAuthor.PublishedYear, 1, 1),
                 Publisher = await bookWithoutAuthor.Publisher.GetPublisherAsync(_context),
