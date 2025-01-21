@@ -25,5 +25,9 @@ namespace Lab2_LibraryWebAPI.Extensions
         {
             return authors.Where(a => authorIds.Contains(a.Id));
         }
+        public static bool AuthorsExists(this IQueryable<Author> authors, List<int> authorIds)
+        {
+            return authorIds.All(id => authors.Any(a => a.Id == id));
+        }
     }
 }

@@ -210,11 +210,8 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (createBookWithAuthorIdDto.AvailableQty > createBookWithAuthorIdDto.TotalQty)
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
-            foreach (var authorId in createBookWithAuthorIdDto.AuthorIds)
-            {
-                if (!await _context.Authors.AnyAsync(a => a.Id == authorId))
-                    return BadRequest($"Author with Id {authorId} does not exist in the database.");
-            }
+            if (!_context.Authors.AuthorsExists(createBookWithAuthorIdDto.AuthorIds))
+                return BadRequest("One of more authors do not exist in the database.");
 
             var bookWithoutAuthor = createBookWithAuthorIdDto.toBookWithoutAuthorDTO();
             var book = await PopulateBookAsync(bookWithoutAuthor);
@@ -240,11 +237,8 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (createBookWithIdsNewTitleDto.AvailableQty > createBookWithIdsNewTitleDto.TotalQty)
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
-            foreach (var authorId in createBookWithIdsNewTitleDto.AuthorIds)
-            {
-                if (!await _context.Authors.AnyAsync(a => a.Id == authorId))
-                    return BadRequest($"Author with Id {authorId} does not exist in the database.");
-            }
+            if (!_context.Authors.AuthorsExists(createBookWithIdsNewTitleDto.AuthorIds))
+                return BadRequest("One of more authors do not exist in the database.");
 
             var genre = await _context.Genres.FindAsync(createBookWithIdsNewTitleDto.GenreId);
             if (genre == null)
@@ -304,11 +298,8 @@ namespace Lab2_LibraryWebAPI.Controllers
                     return BadRequest($"Series with Id {createBookWithIdsNewEditionDto.SeriesId} does not exist in the database.");
             }
 
-            foreach (var authorId in createBookWithIdsNewEditionDto.AuthorIds)
-            {
-                if (!await _context.Authors.AnyAsync(a => a.Id == authorId))
-                    return BadRequest($"Author with Id {authorId} does not exist in the database.");
-            }
+            if (!_context.Authors.AuthorsExists(createBookWithIdsNewEditionDto.AuthorIds))
+                return BadRequest("One of more authors do not exist in the database.");
 
             var genre = await _context.Genres.FindAsync(createBookWithIdsNewEditionDto.GenreId);
             if (genre == null)
