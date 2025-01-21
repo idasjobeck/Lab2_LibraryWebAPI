@@ -252,7 +252,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             var book = new Book
             {
                 Title = await _context.Titles.GetTitleAsync(createBookWithIdsNewTitleDto.Title),
-                Series = createBookWithIdsNewTitleDto.Series == null ? null : await createBookWithIdsNewTitleDto.Series.GetSeriesAsync(_context),
+                Series = createBookWithIdsNewTitleDto.Series == null ? null : await _context.Series.GetSeriesAsync(createBookWithIdsNewTitleDto.Series),
                 NumberInSeries = createBookWithIdsNewTitleDto.Series == null ? null : createBookWithIdsNewTitleDto.NumberInSeries,
                 Authors = await _context.Authors.GetAuthorsByIds(createBookWithIdsNewTitleDto.AuthorIds).ToListAsync(),
                 Genre = genre,
@@ -287,10 +287,10 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (!_context.Titles.TryGetTitleById(createBookWithIdsNewEditionDto.TitleId, out Title title))
                 return BadRequest($"Title with Id {createBookWithIdsNewEditionDto.TitleId} does not exist in the database.");
 
-            var series = await _context.Series.FindAsync(createBookWithIdsNewEditionDto.SeriesId);
+            Series? series = null;
             if (createBookWithIdsNewEditionDto.SeriesId != null)
             {
-                if (series == null)
+                if (!_context.Series.TryGetSeriesById(createBookWithIdsNewEditionDto.SeriesId, out series))
                     return BadRequest($"Series with Id {createBookWithIdsNewEditionDto.SeriesId} does not exist in the database.");
             }
 
@@ -370,7 +370,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return new Book
             {
                 Title = await _context.Titles.GetTitleAsync(bookWithoutAuthor.Title),
-                Series = bookWithoutAuthor.Series == null ? null : await bookWithoutAuthor.Series.GetSeriesAsync(_context),
+                Series = bookWithoutAuthor.Series == null ? null : await _context.Series.GetSeriesAsync(bookWithoutAuthor.Series),
                 NumberInSeries = bookWithoutAuthor.Series == null ? null : bookWithoutAuthor.NumberInSeries,
                 Genre = await _context.Genres.GetGenreAsync(bookWithoutAuthor.Genre),
                 ISBN = bookWithoutAuthor.ISBN,

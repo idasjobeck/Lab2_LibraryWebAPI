@@ -98,8 +98,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Series>> PostSeries(SeriesNameDTO seriesNameDto)
         {
-            var existingSeries = await _context.Series.FirstOrDefaultAsync(s => s.SeriesName == seriesNameDto.SeriesName);
-            if (existingSeries != null)
+            if (_context.Series.TryGetSeriesByName(seriesNameDto.SeriesName, out Series existingSeries))
                 return BadRequest($"A series with the same name ({seriesNameDto.SeriesName}) already exists in the database with Id {existingSeries.Id}.");
 
             var series = seriesNameDto.ToSeries();
