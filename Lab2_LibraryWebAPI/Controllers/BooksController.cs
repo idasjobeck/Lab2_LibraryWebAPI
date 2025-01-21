@@ -126,6 +126,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return book.ToDisplayBookWithIdsDTO();
         }
 
+        //default PUT
         // PUT: api/Books/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -158,6 +159,51 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+        // PUT: api/Books/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdateQuantity/{id}")]
+        public async Task<IActionResult> UpdateBookQuantities(int id, BookQtyDTO bookQtyDto)
+        {
+            var book = await _context.Books.FindAsync(id);
+            if (book == null)
+                return BadRequest($"Book with Id {id} does not exist.");
+
+            //check if available qty is higher than total qty
+            if (bookQtyDto.AvailableQty > bookQtyDto.TotalQty)
+                return BadRequest("Available quantity cannot be higher than total quantity.");
+
+            var currentOnLoanQty = await _context.Loans.Where(l => l.Book.Id == id && l.ReturnedDate == null).CountAsync();
+            //new total quantity cannot be lower than the number of books currently on loan
+            if (bookQtyDto.TotalQty < currentOnLoanQty)
+                return BadRequest("New total quantity cannot be lower than the number of books currently on loan.");
+            //new available quantity cannot be lower than the number of books currently on loan
+            if (bookQtyDto.AvailableQty < currentOnLoanQty)
+                return BadRequest("New available quantity cannot be lower than the number of books currently on loan.");
+
+            book.TotalQty = bookQtyDto.TotalQty;
+            book.AvailableQty = bookQtyDto.AvailableQty - currentOnLoanQty;
+
+            _context.Entry(book).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BookExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Books
