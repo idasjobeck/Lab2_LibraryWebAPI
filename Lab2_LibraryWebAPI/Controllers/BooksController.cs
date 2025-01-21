@@ -243,8 +243,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             if(!_context.Genres.TryGetGenreById(createBookWithIdsNewTitleDto.GenreId, out Genre genre))
                 return BadRequest($"Genre with Id {createBookWithIdsNewTitleDto.GenreId} does not exist in the database.");
 
-            var publisher = await _context.Publishers.FindAsync(createBookWithIdsNewTitleDto.PublisherId);
-            if (publisher == null)
+            if (!_context.Publishers.TryGetPublisherById(createBookWithIdsNewTitleDto.PublisherId, out Publisher publisher))
                 return BadRequest($"Publisher with Id {createBookWithIdsNewTitleDto.PublisherId} does not exist in the database.");
 
             if (!_context.Editions.TryGetEditionById(createBookWithIdsNewTitleDto.EditionId, out Edition edition))
@@ -311,7 +310,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 Genre = genre,
                 ISBN = createBookWithIdsNewEditionDto.ISBN,
                 PublishedYear = new DateOnly(createBookWithIdsNewEditionDto.PublishedYear, 1, 1),
-                Publisher = await createBookWithIdsNewEditionDto.Publisher.GetPublisherAsync(_context),
+                Publisher = await _context.Publishers.GetPublisherAsync(createBookWithIdsNewEditionDto.Publisher),
                 Edition = await _context.Editions.GetEditionAsync(createBookWithIdsNewEditionDto.Edition),
                 TotalQty = createBookWithIdsNewEditionDto.TotalQty,
                 AvailableQty = createBookWithIdsNewEditionDto.AvailableQty
@@ -377,7 +376,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 Genre = await _context.Genres.GetGenreAsync(bookWithoutAuthor.Genre),
                 ISBN = bookWithoutAuthor.ISBN,
                 PublishedYear = new DateOnly(bookWithoutAuthor.PublishedYear, 1, 1),
-                Publisher = await bookWithoutAuthor.Publisher.GetPublisherAsync(_context),
+                Publisher = await _context.Publishers.GetPublisherAsync(bookWithoutAuthor.Publisher),
                 Edition = await _context.Editions.GetEditionAsync(bookWithoutAuthor.Edition),
                 TotalQty = bookWithoutAuthor.TotalQty,
                 AvailableQty = bookWithoutAuthor.AvailableQty
