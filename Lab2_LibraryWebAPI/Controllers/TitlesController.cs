@@ -98,7 +98,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Title>> PostTitle(TitleNameDTO titleNameDto)
         {
-            if (_context.Titles.TryGetTitleByName(titleNameDto.TitleName, out Title existingTitle))
+            if (_context.Titles.TryGetTitleByName(titleNameDto.TitleName, out var existingTitle))
                 return BadRequest($"A title with the same name ({titleNameDto.TitleName}) already exists in the database with Id {existingTitle.Id}.");
 
             var title = titleNameDto.ToTitle();

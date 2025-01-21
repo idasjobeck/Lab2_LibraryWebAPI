@@ -98,7 +98,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Genre>> PostGenre(GenreNameDTO genreNameDto)
         {
-            if(_context.Genres.TryGetGenreByName(genreNameDto.GenreName, out Genre existingGenre))
+            if(_context.Genres.TryGetGenreByName(genreNameDto.GenreName, out var existingGenre))
                 return BadRequest($"A genre with the same name ({genreNameDto.GenreName}) already exists in the database with Id {existingGenre.Id}.");
 
             var genre = genreNameDto.ToGenre();

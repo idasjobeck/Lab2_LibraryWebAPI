@@ -98,7 +98,7 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Publisher>> PostPublisher(PublisherNameDTO publisherNameDto)
         {
-            if (_context.Publishers.TryGetPublisherByName(publisherNameDto.PublisherName, out Publisher existingPublisher))
+            if (_context.Publishers.TryGetPublisherByName(publisherNameDto.PublisherName, out var existingPublisher))
                 return BadRequest($"A publisher with the same name ({publisherNameDto.PublisherName}) already exists in the database with Id {existingPublisher.Id}.");
 
             var publisher = publisherNameDto.ToPublisher();

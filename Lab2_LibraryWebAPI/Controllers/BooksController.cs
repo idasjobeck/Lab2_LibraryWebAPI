@@ -286,13 +286,13 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (!_context.Authors.AuthorsExists(createBookWithIdsNewTitleDto.AuthorIds))
                 return BadRequest("One or more authors do not exist in the database.");
 
-            if(!_context.Genres.TryGetGenreById(createBookWithIdsNewTitleDto.GenreId, out Genre genre))
+            if(!_context.Genres.TryGetGenreById(createBookWithIdsNewTitleDto.GenreId, out var genre))
                 return BadRequest($"Genre with Id {createBookWithIdsNewTitleDto.GenreId} does not exist in the database.");
 
-            if (!_context.Publishers.TryGetPublisherById(createBookWithIdsNewTitleDto.PublisherId, out Publisher publisher))
+            if (!_context.Publishers.TryGetPublisherById(createBookWithIdsNewTitleDto.PublisherId, out var publisher))
                 return BadRequest($"Publisher with Id {createBookWithIdsNewTitleDto.PublisherId} does not exist in the database.");
 
-            if (!_context.Editions.TryGetEditionById(createBookWithIdsNewTitleDto.EditionId, out Edition edition))
+            if (!_context.Editions.TryGetEditionById(createBookWithIdsNewTitleDto.EditionId, out var edition))
                 return BadRequest($"Edition with Id {createBookWithIdsNewTitleDto.EditionId} does not exist in the database.");
 
             var book = new Book
@@ -330,7 +330,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (createBookWithIdsNewEditionDto.AvailableQty > createBookWithIdsNewEditionDto.TotalQty)
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
-            if (!_context.Titles.TryGetTitleById(createBookWithIdsNewEditionDto.TitleId, out Title title))
+            if (!_context.Titles.TryGetTitleById(createBookWithIdsNewEditionDto.TitleId, out var title))
                 return BadRequest($"Title with Id {createBookWithIdsNewEditionDto.TitleId} does not exist in the database.");
 
             Series? series = null;
@@ -343,7 +343,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (!_context.Authors.AuthorsExists(createBookWithIdsNewEditionDto.AuthorIds))
                 return BadRequest("One or more authors do not exist in the database.");
 
-            if (!_context.Genres.TryGetGenreById(createBookWithIdsNewEditionDto.GenreId, out Genre genre))
+            if (!_context.Genres.TryGetGenreById(createBookWithIdsNewEditionDto.GenreId, out var genre))
                 return BadRequest($"Genre with Id {createBookWithIdsNewEditionDto.GenreId} does not exist in the database.");
 
             var book = new Book
