@@ -44,6 +44,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return publisher;
         }
 
+        //default PUT
         // PUT: api/Publishers/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -76,6 +77,42 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+        // PUT: api/Publishers/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdatePublisher/{id}")]
+        public async Task<IActionResult> PutPublisher(int id, PublisherNameDTO publisherNameDto)
+        {
+            //check if the publisher to be edited exists
+            if (!_context.Publishers.TryGetPublisherById(id, out var publisher))
+                return NotFound();
+
+            //check if a publisher with the same name already exists
+            if (_context.Publishers.TryGetPublisherByName(publisherNameDto.PublisherName, out var existingPublisher))
+                return BadRequest($"A publisher with the same new name ({publisherNameDto.PublisherName}) already exists in the database with Id {existingPublisher.Id}.");
+
+            publisher.PublisherName = publisherNameDto.PublisherName;
+
+            _context.Entry(publisher).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PublisherExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Publishers

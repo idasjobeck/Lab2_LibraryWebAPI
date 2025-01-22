@@ -44,6 +44,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return series;
         }
 
+        //default PUT
         // PUT: api/Series/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -76,6 +77,42 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+        // PUT: api/Series/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdateSeries/{id}")]
+        public async Task<IActionResult> PutSeries(int id, SeriesNameDTO seriesNameDto)
+        {
+            //check if the series to be edited exists
+            if (!_context.Series.TryGetSeriesById(id, out var series))
+                return NotFound();
+
+            //check if a series with the same name already exists
+            if (_context.Series.TryGetSeriesByName(seriesNameDto.SeriesName, out var existingSeries))
+                return BadRequest($"A series with the same new name ({seriesNameDto.SeriesName}) already exists in the database with Id {existingSeries.Id}.");
+
+            series.SeriesName = seriesNameDto.SeriesName;
+
+            _context.Entry(series).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SeriesExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Series

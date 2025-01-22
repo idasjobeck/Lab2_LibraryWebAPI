@@ -44,6 +44,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return genre;
         }
 
+        //default PUT
         // PUT: api/Genres/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -76,6 +77,42 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+        // PUT: api/Genres/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdateGenre/{id}")]
+        public async Task<IActionResult> PutGenre(int id, GenreNameDTO genreNameDto)
+        {
+            //check if the genre to be edited exists
+            if (!_context.Genres.TryGetGenreById(id, out var genre))
+                return NotFound();
+
+            //check if a genre with the same name already exists
+            if (_context.Genres.TryGetGenreByName(genreNameDto.GenreName, out var existingGenre))
+                return BadRequest($"A genre with the same new name ({genreNameDto.GenreName}) already exists in the database with Id {existingGenre.Id}.");
+
+            genre.GenreName = genreNameDto.GenreName;
+
+            _context.Entry(genre).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GenreExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Genres

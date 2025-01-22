@@ -46,6 +46,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return author;
         }
 
+        //default PUT
         // PUT: api/Authors/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -78,6 +79,43 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+        // PUT: api/Authors/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdateAuthor/{id}")]
+        public async Task<IActionResult> PutAuthor(int id, AuthorNameDTO authorNameDto)
+        {
+            //check if the author to be edited exists
+            if (!_context.Authors.TryGetAuthorById(id, out var author))
+                return NotFound();
+
+            //check if an author with the same name already exists
+            if (_context.Authors.TryGetAuthorByName(authorNameDto.FirstName, authorNameDto.LastName, out var existingAuthor))
+                return BadRequest($"An author with the same new name ({authorNameDto.FirstName} {authorNameDto.LastName}) already exists in the database with Id {existingAuthor.Id}.");
+
+            author.FirstName = authorNameDto.FirstName;
+            author.LastName = authorNameDto.LastName;
+
+            _context.Entry(author).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AuthorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Authors

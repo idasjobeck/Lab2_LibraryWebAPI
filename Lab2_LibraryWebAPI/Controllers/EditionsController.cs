@@ -44,6 +44,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return edition;
         }
 
+        //default PUT
         // PUT: api/Editions/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -76,6 +77,43 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+
+        // PUT: api/Editions/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("UpdateEdition/{id}")]
+        public async Task<IActionResult> PutEdition(int id, EditionNameDTO editionNameDto)
+        {
+            //check if the edition to be edited exists
+            if (!_context.Editions.TryGetEditionById(id, out var edition))
+                return NotFound();
+
+            //check if an edition with the same name already exists
+            if (_context.Editions.TryGetEditionByName(editionNameDto.EditionName, out var existingEdition))
+                return BadRequest($"An edition with the same new name ({editionNameDto.EditionName}) already exists in the database with Id {existingEdition.Id}.");
+
+            edition.EditionName = editionNameDto.EditionName;
+
+            _context.Entry(edition).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EditionExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Editions

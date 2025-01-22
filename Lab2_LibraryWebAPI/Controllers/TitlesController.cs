@@ -44,6 +44,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             return title;
         }
 
+        //default PUT
         // PUT: api/Titles/5
         /*
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -76,6 +77,42 @@ namespace Lab2_LibraryWebAPI.Controllers
             return NoContent();
         }
         */
+
+        // PUT: api/Titles/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTitle(int id, TitleNameDTO titleNameDto)
+        {
+            //check if the title to be edited exists
+            if (!_context.Titles.TryGetTitleById(id, out var title))
+                return NotFound();
+
+            //check if a title with the same name already exists
+            if (_context.Titles.TryGetTitleByName(titleNameDto.TitleName, out var existingTitle))
+                return BadRequest($"A title with the same new name ({titleNameDto.TitleName}) already exists in the database with Id {existingTitle.Id}.");
+
+            title.TitleName = titleNameDto.TitleName;
+
+            _context.Entry(title).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TitleExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         //default POST
         // POST: api/Titles
