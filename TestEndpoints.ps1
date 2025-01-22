@@ -97,9 +97,9 @@ if($queryDbExists){
 if(Select-String -LiteralPath ".\$projectName\Program.cs" -Pattern "EnsureCreated()"){
     Write-Host "The project uses EnsureCreated() to create the database from the model." -ForegroundColor Yellow
 } else {
-    if($createDatabase -or (Read-Host "Should dotnet ef migrate and update the database? (y/n)").ToLower() -eq "y") { 
+    if($createDatabase -or (Read-Host "Should dotnet ef migrate and update the database (using most recent migration)? (y/n)").ToLower() -eq "y") { 
 
-        dotnet ef migrations add "UpdateModelFromScript_$(Get-Date -Format "yyyyMMdd_HHmmss")" --project ".\$projectName\$projectName.csproj"
+        #dotnet ef migrations add "UpdateModelFromScript_$(Get-Date -Format "yyyyMMdd_HHmmss")" --project ".\$projectName\$projectName.csproj"
         dotnet ef database update --project ".\$projectName\$projectName.csproj"
     }
 }
