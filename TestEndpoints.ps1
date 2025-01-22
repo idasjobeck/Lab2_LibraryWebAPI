@@ -106,7 +106,7 @@ if(Select-String -LiteralPath ".\$projectName\Program.cs" -Pattern "EnsureCreate
 
 # Run the application
 if((Read-Host "Start the server from Visual studio? (y/n)").ToLower() -ne "y") { 
-    Start-Process -FilePath "dotnet" -ArgumentList "run --launch-profile $launchProfile --project .\$projectName\$projectName.csproj" -WindowStyle Normal    
+    $myServer = Start-Process -FilePath "dotnet" -ArgumentList "run --launch-profile $launchProfile --project .\$projectName\$projectName.csproj" -WindowStyle Normal -PassThru    
     Write-Host "Wait for the server to start..." -ForegroundColor Yellow 
 }
 
@@ -874,3 +874,5 @@ if($queryDbExists){
         Write-Host "Database $databaseName dropped." -ForegroundColor Green
     }
 }
+
+Stop-Process -InputObject $myServer
