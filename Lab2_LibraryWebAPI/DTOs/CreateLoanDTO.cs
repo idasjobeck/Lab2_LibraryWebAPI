@@ -2,7 +2,7 @@
 {
     public class CreateLoanDTO
     {
-        public string Title { get; set; }
+        public required string Title { get; set; }
         public int CardNumber { get; set; }
     }
 }

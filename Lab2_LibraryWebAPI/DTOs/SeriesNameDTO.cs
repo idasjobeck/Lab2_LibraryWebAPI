@@ -2,6 +2,6 @@
 {
     public class SeriesNameDTO
     {
-        public string SeriesName { get; set; }
+        public required string SeriesName { get; set; }
     }
 }

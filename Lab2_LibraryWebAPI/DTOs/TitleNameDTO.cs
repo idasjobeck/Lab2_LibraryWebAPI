@@ -2,6 +2,6 @@
 {
     public class TitleNameDTO
     {
-        public string TitleName { get; set; }
+        public required string TitleName { get; set; }
     }
 }

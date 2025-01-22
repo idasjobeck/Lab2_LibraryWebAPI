@@ -8,6 +8,6 @@
         public required string LastName { get; set; }
         public string? Email { get; set; }
 
-        public List<Loan> Loans { get; set; }
+        public List<Loan> Loans { get; set; } = new ();
     }
 }

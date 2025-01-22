@@ -3,6 +3,6 @@
     public class Publisher
     {
         public int Id { get; set; }
-        public string PublisherName { get; set; }
+        public required string PublisherName { get; set; }
     }
 }

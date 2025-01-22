@@ -2,6 +2,6 @@
 {
     public class GenreNameDTO
     {
-        public string GenreName { get; set; }
+        public required string GenreName { get; set; }
     }
 }

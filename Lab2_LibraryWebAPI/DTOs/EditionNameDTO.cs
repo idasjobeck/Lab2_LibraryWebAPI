@@ -2,6 +2,6 @@
 {
     public class EditionNameDTO
     {
-        public string EditionName { get; set; }
+        public required string EditionName { get; set; }
     }
 }

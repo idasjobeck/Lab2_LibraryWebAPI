@@ -2,6 +2,6 @@
 {
     public class PublisherNameDTO
     {
-        public string PublisherName { get; set; }
+        public required string PublisherName { get; set; }
     }
 }
