@@ -102,7 +102,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 .Include(b => b.Edition)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
-            return book.ToDisplayBookDTO();
+            return book!.ToDisplayBookDTO();
         }
 
         // GET: api/Books/5
@@ -123,7 +123,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 .Include(b => b.Edition)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
-            return book.ToDisplayBookWithIdsDTO();
+            return book!.ToDisplayBookWithIdsDTO();
         }
 
         //default PUT
@@ -173,7 +173,7 @@ namespace Lab2_LibraryWebAPI.Controllers
             if (bookQtyDto.AvailableQty > bookQtyDto.TotalQty)
                 return BadRequest("Available quantity cannot be higher than total quantity.");
 
-            var currentOnLoanQty = await _context.Loans.Where(l => l.Book.Id == id && l.ReturnedDate == null).CountAsync();
+            var currentOnLoanQty = await _context.Loans.Where(l => l.Book!.Id == id && l.ReturnedDate == null).CountAsync();
             //new total quantity cannot be lower than the number of books currently on loan
             if (bookQtyDto.TotalQty < currentOnLoanQty)
                 return BadRequest("New total quantity cannot be lower than the number of books currently on loan.");
@@ -395,7 +395,7 @@ namespace Lab2_LibraryWebAPI.Controllers
                 return NotFound();
 
             //check if book has outstanding loans
-            var hasLoans = await _context.Loans.AnyAsync(l => l.Book.Id == id && l.ReturnedDate == null);
+            var hasLoans = await _context.Loans.AnyAsync(l => l.Book!.Id == id && l.ReturnedDate == null);
             if (hasLoans)
                 return BadRequest("Book has outstanding loans and cannot be deleted at this time.");
 

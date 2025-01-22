@@ -141,17 +141,21 @@ namespace Lab2_LibraryWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(CreateUserDTO createUserDto)
         {
-            //check if email already exists in db
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == createUserDto.Email);
-            if (existingUser != null)
-                return BadRequest(
-                    $"A user with the same email ({createUserDto.Email}) already exists in the database with Id {existingUser.Id}.");
+            if (createUserDto.Email != null)
+            {
+                //check if email already exists in db
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == createUserDto.Email);
+                if (existingUser != null)
+                    return BadRequest(
+                        $"A user with the same email ({createUserDto.Email}) already exists in the database with Id {existingUser.Id}.");
 
-            //check email is in a valid format
-            //regex pattern @"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-            var emailValidationPattern = @"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$";
-            if (!Regex.IsMatch(createUserDto.Email, emailValidationPattern))
-                return BadRequest("Email is not in a valid format.");
+                //check email is in a valid format
+                //regex pattern @"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                var emailValidationPattern =
+                    @"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$";
+                if (!Regex.IsMatch(createUserDto.Email, emailValidationPattern))
+                    return BadRequest("Email is not in a valid format.");
+            }
 
             var maxUser = 0;
             var baseCardNumber = 900000;

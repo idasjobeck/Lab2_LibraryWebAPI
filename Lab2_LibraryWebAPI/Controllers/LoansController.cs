@@ -97,7 +97,7 @@ namespace Lab2_LibraryWebAPI.Controllers
 
             loan.ReturnedDate = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
             loan.Rating = returnLoanDto.BookRating;
-            var book = await _context.Books.FindAsync(loan.Book.Id);
+            var book = await _context.Books.FindAsync(loan.Book!.Id);
             book!.AvailableQty++;
             //if available qty is greater than total qty, set available qty to total qty
             if (book.AvailableQty > book.TotalQty)
